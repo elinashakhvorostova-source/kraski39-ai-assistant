@@ -20,8 +20,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ success: false, error: 'Message is required' });
   }
 
-  const apiKey = 'AIzaSyCitZUseeoVB1gBBu-PlA3OcxzvqDj1mdI';
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+  const apiKey = 'AIzaSyBYSyJE_zBtG34mTMqPlVwHM2sAGIsQzl0';
+  
+  // Используем v1 API и модель gemini-1.5-pro
+  const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
 
   const systemContext = `Ты — AI-консультант магазина «Новые Стены» (kraski39.ru) в Калининграде.
 
@@ -116,13 +118,28 @@ Email: office@kraski39.ru
 
     const data = await response.json();
 
+    if (data.error) {
+      return res.status(500).json({ 
+        success: false, 
+        error: `Gemini API error: ${data.error.message}`,
+        details: data.error
+      });
+    }
+
     if (data.candidates && data.candidates[0]) {
       const aiResponse = data.candidates[0].content.parts[0].text;
       return res.status(200).json({ success: true, response: aiResponse });
     } else {
-      return res.status(500).json({ success: false, error: 'No response from AI' });
+      return res.status(500).json({ 
+        success: false, 
+        error: 'No response from AI',
+        raw: data
+      });
     }
   } catch (error) {
-    return res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({ 
+      success: false, 
+      error: `Request error: ${error.message}`
+    });
   }
 }
