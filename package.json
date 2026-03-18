@@ -1,0 +1,13 @@
+{
+  "name": "kraski39-ai-assistant",
+  "version": "1.0.0",
+  "description": "AI-консультант для магазина Новые Стены",
+  "main": "api/chat.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build"
+  },
+  "keywords": ["ai", "assistant", "gemini"],
+  "author": "MarketBot",
+  "license": "MIT"
+}
