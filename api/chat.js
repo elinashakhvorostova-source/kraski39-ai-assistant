@@ -20,7 +20,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ success: false, error: 'Message is required' });
   }
 
-  const apiKey = 'AIzaSyBYSyJE_zBtG34mTMqPlVwHM2sAGIsQzl0';
+  // Читаем API ключ из переменной окружения (безопасно!)
+  const apiKey = process.env.GEMINI_API_KEY;
+  
+  if (!apiKey) {
+    return res.status(500).json({ 
+      success: false, 
+      error: 'GEMINI_API_KEY not configured' 
+    });
+  }
   
   // Используем v1 API и модель gemini-1.5-pro
   const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
